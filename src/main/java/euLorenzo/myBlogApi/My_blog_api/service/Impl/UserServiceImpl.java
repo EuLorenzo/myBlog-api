@@ -4,7 +4,9 @@ import euLorenzo.myBlogApi.My_blog_api.Entity.User;
 import euLorenzo.myBlogApi.My_blog_api.repository.UserRepository;
 import euLorenzo.myBlogApi.My_blog_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -17,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String username) {
+
         return userRepository.getUserByUsername(username);
     }
 }

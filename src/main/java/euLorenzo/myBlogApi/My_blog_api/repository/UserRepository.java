@@ -2,9 +2,12 @@ package euLorenzo.myBlogApi.My_blog_api.repository;
 
 import euLorenzo.myBlogApi.My_blog_api.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     User getUserByUsername(String username);
+
+    UserDetails findByUsername(String username);
 }
