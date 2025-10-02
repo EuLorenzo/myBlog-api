@@ -1,14 +1,21 @@
 package euLorenzo.myBlogApi.My_blog_api.Entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_user")
+@ToString
+@EqualsAndHashCode
 public class User implements UserDetails {
 
     public User(String username, String email, String password) {
@@ -16,8 +23,6 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
     }
-
-    public User(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

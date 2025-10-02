@@ -1,18 +1,17 @@
 package euLorenzo.myBlogApi.My_blog_api.controller;
 
 import euLorenzo.myBlogApi.My_blog_api.Entity.Post;
+import euLorenzo.myBlogApi.My_blog_api.dto.PostDTO;
 import euLorenzo.myBlogApi.My_blog_api.repository.PostRepository;
 import euLorenzo.myBlogApi.My_blog_api.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/post")
+@RestController
+@RequestMapping("post")
 public class PostController {
     @Autowired
     PostService postService;
@@ -23,7 +22,18 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+    public ResponseEntity<Post> createPost(@RequestBody PostDTO post) {
         return ResponseEntity.ok(postService.createPost(post));
+    }
+
+    @PutMapping
+    public ResponseEntity<Post> updatePost(@RequestBody Post post) {
+        return ResponseEntity.ok(postService.updatedPost(post));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Post> deletePost(@RequestParam Integer postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.ok().build();
     }
 }

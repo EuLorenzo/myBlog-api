@@ -1,7 +1,15 @@
 package euLorenzo.myBlogApi.My_blog_api.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_post")
 public class Post {
@@ -14,5 +22,5 @@ public class Post {
     private String content;
 
     @ManyToOne
-    private User author;
+    private User user;
 }
