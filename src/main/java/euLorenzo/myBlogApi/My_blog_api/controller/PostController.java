@@ -2,6 +2,7 @@ package euLorenzo.myBlogApi.My_blog_api.controller;
 
 import euLorenzo.myBlogApi.My_blog_api.Entity.Post;
 import euLorenzo.myBlogApi.My_blog_api.dto.PostDTO;
+import euLorenzo.myBlogApi.My_blog_api.dto.PostResponseDTO;
 import euLorenzo.myBlogApi.My_blog_api.repository.PostRepository;
 import euLorenzo.myBlogApi.My_blog_api.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class PostController {
     PostService postService;
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
         return ResponseEntity.ok(postService.getAllPosts());
     }
 
@@ -27,13 +28,14 @@ public class PostController {
     }
 
     @PutMapping
-    public ResponseEntity<Post> updatePost(@RequestBody Post post) {
+    public ResponseEntity<Post> updatePost(@RequestBody PostDTO post) {
+        System.out.println("Chegou até aqui");
         return ResponseEntity.ok(postService.updatedPost(post));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Post> deletePost(@RequestParam Integer postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<Post> deletePost(@PathVariable Integer id) {
+        postService.deletePost(id);
         return ResponseEntity.ok().build();
     }
 }

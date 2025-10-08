@@ -1,5 +1,6 @@
 package euLorenzo.myBlogApi.My_blog_api.security;
 
+import euLorenzo.myBlogApi.My_blog_api.exceptions.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

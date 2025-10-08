@@ -8,14 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "tb_user")
+@Getter
+@Setter
 @ToString
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
 
     public User(String username, String email, String password) {
@@ -34,8 +34,8 @@ public class User implements UserDetails {
 
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Post> posts;
+    //@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //private List<Post> posts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

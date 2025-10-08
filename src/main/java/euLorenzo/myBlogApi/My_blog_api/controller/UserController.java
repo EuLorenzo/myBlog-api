@@ -2,6 +2,7 @@ package euLorenzo.myBlogApi.My_blog_api.controller;
 
 import euLorenzo.myBlogApi.My_blog_api.Entity.Post;
 import euLorenzo.myBlogApi.My_blog_api.Entity.User;
+import euLorenzo.myBlogApi.My_blog_api.dto.PostResponseDTO;
 import euLorenzo.myBlogApi.My_blog_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/posts/{userId}")
-    public ResponseEntity<List<Post>> getUserPosts(@PathVariable("userId") String userId) {
+    public ResponseEntity<List<PostResponseDTO>> getUserPosts(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(userService.getUserPosts(userId));
     }
 }

@@ -1,19 +1,65 @@
 package euLorenzo.myBlogApi.My_blog_api.service.Impl;
 
-import euLorenzo.myBlogApi.My_blog_api.Entity.Post;
 import euLorenzo.myBlogApi.My_blog_api.Entity.User;
+import euLorenzo.myBlogApi.My_blog_api.dto.AuthenticationDTO;
+import euLorenzo.myBlogApi.My_blog_api.dto.LoginResponseDTO;
+import euLorenzo.myBlogApi.My_blog_api.dto.PostResponseDTO;
+import euLorenzo.myBlogApi.My_blog_api.dto.RegisterDTO;
+import euLorenzo.myBlogApi.My_blog_api.exceptions.UserAlreadyExistsException;
+import euLorenzo.myBlogApi.My_blog_api.repository.PostRepository;
 import euLorenzo.myBlogApi.My_blog_api.repository.UserRepository;
+import euLorenzo.myBlogApi.My_blog_api.security.TokenService;
 import euLorenzo.myBlogApi.My_blog_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.AuthenticationException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Override
+    public LoginResponseDTO login(AuthenticationDTO data) {
+        if(userRepository.findByUsername(data.username()) == null){
+            throw new RuntimeException("Username or password incorrect");
+        }
+
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        var userId = ((User) auth.getPrincipal()).getId();
+
+        return new LoginResponseDTO(token, userId);
+    }
+
+    @Override
+    public void register(RegisterDTO data){
+        if(this.userRepository.findByUsername(data.username()) != null){
+            throw new UserAlreadyExistsException("An user with this username already exists");
+        }
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        User newUser = new User(data.username(),data.email(),encryptedPassword);
+
+        userRepository.save(newUser);
+    }
 
     @Override
     public User createUser(User user) {
@@ -21,16 +67,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Post> getUserPosts(String userId) {
-        var user = userRepository.findById(Integer.parseInt(userId));
+    public List<PostResponseDTO> getUserPosts(String userId) {
+        var userPosts = postRepository.findPostByUserId(Integer.parseInt(userId));
 
-        if(user.isEmpty()){
-            throw new RuntimeException("User not found");
-        }
+        var postsResponseDTOs = new ArrayList<PostResponseDTO>();
 
-        System.out.println(user.get().toString());
+        userPosts.forEach(post -> {
+            var postDto = new PostResponseDTO(post.getId(), post.getTitle(), post.getContent(), post.getUser().getUsername());
+            postsResponseDTOs.add(postDto);
+        });
 
-        return user.get().getPosts();
+        return postsResponseDTOs;
     }
 
     @Override
